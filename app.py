@@ -11,6 +11,24 @@ from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.sqlite import SqliteSaver
 import streamlit as st
 from langchain_groq import ChatGroq
+
+st.set_page_config(
+    page_title="Cardiovascular Health Assistant",
+    page_icon="❤️",
+    layout="wide"
+)
+
+st.title("❤️ Cardiovascular Health Assistant")
+st.caption(
+    "Streamlit + FastAPI + LangGraph + Groq + Medical Research"
+)
+
+st.warning(
+    "Educational use only. The ML output is not a medical "
+    "diagnosis or a clinically validated individual risk estimate."
+)
+
+
 #GROQ_API_KEY = "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"
 GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
 model = ChatGroq(
