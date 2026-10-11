@@ -54,129 +54,129 @@ class ChatState(TypedDict, total=False):
     doctor_results: str
     final_response: str
   
-def extract_input(state: ChatState):
+# def extract_input(state: ChatState):
 
-    question = state["question"]
+#     question = state["question"]
 
-    prompt = f"""
-You are a cardiovascular health information extraction system.
+#     prompt = f"""
+# You are a cardiovascular health information extraction system.
 
-Extract the following information from the user's message:
+# Extract the following information from the user's message:
 
-1. age
-2. sex
-3. height_cm
-4. weight_kg
-5. systolic_bp
-6. cholesterol
-7. glucose
-8. smoking
-9. family_history
-10. physical_activity
-11. diabetes
-12. hypertension_history
+# 1. age
+# 2. sex
+# 3. height_cm
+# 4. weight_kg
+# 5. systolic_bp
+# 6. cholesterol
+# 7. glucose
+# 8. smoking
+# 9. family_history
+# 10. physical_activity
+# 11. diabetes
+# 12. hypertension_history
 
-IMPORTANT RULES:
+# IMPORTANT RULES:
 
-- Return exactly 12 values.
-- Separate values using commas.
-- If information is missing, return "Not value".
-- NEVER use 0 for missing information.
-- Do not add explanations.
-- Do not add labels.
-- Do not use bullet points.
+# - Return exactly 12 values.
+# - Separate values using commas.
+# - If information is missing, return "Not value".
+# - NEVER use 0 for missing information.
+# - Do not add explanations.
+# - Do not add labels.
+# - Do not use bullet points.
 
-Allowed categorical values:
+# Allowed categorical values:
 
-sex:
-Male or Female
+# sex:
+# Male or Female
 
-smoking:
-Yes or No
+# smoking:
+# Yes or No
 
-family_history:
-Yes or No
+# family_history:
+# Yes or No
 
-physical_activity:
-High, Medium or Low
+# physical_activity:
+# High, Medium or Low
 
-diabetes:
-Yes or No
+# diabetes:
+# Yes or No
 
-hypertension_history:
-Yes or No
+# hypertension_history:
+# Yes or No
 
-Example:
+# Example:
 
-45, Male, 172, 82, 140, 220, 110, Yes, Yes, Low, No, Yes
+# 45, Male, 172, 82, 140, 220, 110, Yes, Yes, Low, No, Yes
 
-User input:
-{question}
-"""
+# User input:
+# {question}
+# """
 
-    response = model.invoke(prompt)
+#     response = model.invoke(prompt)
 
-    raw_output = response.content.strip()
+#     raw_output = response.content.strip()
 
-    print("\n========== RAW LLM RESPONSE ==========")
-    print(raw_output)
-    print("======================================\n")
+#     print("\n========== RAW LLM RESPONSE ==========")
+#     print(raw_output)
+#     print("======================================\n")
 
-    values = [v.strip() for v in raw_output.split(",")]
+#     values = [v.strip() for v in raw_output.split(",")]
 
-    print("Extracted values:", values)
-    print("Number of values:", len(values))
+#     print("Extracted values:", values)
+#     print("Number of values:", len(values))
 
-    if len(values) != 12:
-        raise ValueError(
-            f"Expected 12 values, but received {len(values)}: {values}"
-        )
+#     if len(values) != 12:
+#         raise ValueError(
+#             f"Expected 12 values, but received {len(values)}: {values}"
+#         )
 
-    def safe_int(value):
-        value = value.strip()
+#     def safe_int(value):
+#         value = value.strip()
 
-        if value.lower() in {
-            "not value",
-            "unknown",
-            "none",
-            "null",
-            ""
-        }:
-            return None
+#         if value.lower() in {
+#             "not value",
+#             "unknown",
+#             "none",
+#             "null",
+#             ""
+#         }:
+#             return None
 
-        try:
-            return int(float(value))
-        except (ValueError, TypeError):
-            return None
+#         try:
+#             return int(float(value))
+#         except (ValueError, TypeError):
+#             return None
 
-    def safe_text(value):
-        value = value.strip()
+#     def safe_text(value):
+#         value = value.strip()
 
-        if value.lower() in {
-            "not value",
-            "unknown",
-            "none",
-            "null",
-            ""
-        }:
-            return None
+#         if value.lower() in {
+#             "not value",
+#             "unknown",
+#             "none",
+#             "null",
+#             ""
+#         }:
+#             return None
 
-        return value
+#         return value
 
-    return {
-        "age": safe_int(values[0]),
-        "sex": safe_text(values[1]),
-        "height_cm": safe_int(values[2]),
-        "weight_kg": safe_int(values[3]),
-        "systolic_bp": safe_int(values[4]),
-        "cholesterol": safe_int(values[5]),
-        "glucose": safe_int(values[6]),
-        "smoking": safe_text(values[7]),
-        "family_history": safe_text(values[8]),
-        "physical_activity": safe_text(values[9]),
-        "diabetes": safe_text(values[10]),
-        "hypertension_history": safe_text(values[11])
-    }
+#     return {
+#         "age": safe_int(values[0]),
+#         "sex": safe_text(values[1]),
+#         "height_cm": safe_int(values[2]),
+#         "weight_kg": safe_int(values[3]),
+#         "systolic_bp": safe_int(values[4]),
+#         "cholesterol": safe_int(values[5]),
+#         "glucose": safe_int(values[6]),
+#         "smoking": safe_text(values[7]),
+#         "family_history": safe_text(values[8]),
+#         "physical_activity": safe_text(values[9]),
+#         "diabetes": safe_text(values[10]),
+#         "hypertension_history": safe_text(values[11])
+#     }
 
 
 import requests
