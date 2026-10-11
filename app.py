@@ -290,7 +290,7 @@ def search_tool(state: ChatState):
             "Do not invent research findings."
         )
 
-  from langchain_community.tools import DuckDuckGoSearchRun
+from langchain_community.tools import DuckDuckGoSearchRun
 
 search = DuckDuckGoSearchRun()
 
