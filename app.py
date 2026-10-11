@@ -536,20 +536,20 @@ from langgraph.graph import StateGraph, START, END
 
 graph = StateGraph(ChatState)
 
-graph.add_node("extract_input", extract_input)
 graph.add_node("predict_input", safe_predict_input)
-graph.add_node("search_tool", search_tool)
 graph.add_node("calculate_bmi", calculate_bmi)
+graph.add_node("search_tool", search_tool)
 graph.add_node("advice_tool", advice_tool)
 graph.add_node("final_output", final_output)
 
-graph.add_edge(START, "extract_input")
-graph.add_edge("extract_input", "predict_input")
-graph.add_edge("predict_input", "search_tool")
-graph.add_edge("search_tool", "calculate_bmi")
-graph.add_edge("calculate_bmi", "advice_tool")
+graph.add_edge(START, "predict_input")
+graph.add_edge("predict_input", "calculate_bmi")
+graph.add_edge("calculate_bmi", "search_tool")
+graph.add_edge("search_tool", "advice_tool")
 graph.add_edge("advice_tool", "final_output")
 graph.add_edge("final_output", END)
+
+graph_app = graph.compile(checkpointer=checkpointer)
 
 # Compile ONCE
 graph_app = graph.compile(checkpointer=checkpointer)
