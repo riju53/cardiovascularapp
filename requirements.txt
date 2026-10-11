@@ -1,0 +1,10 @@
+streamlit==1.45.1
+requests==2.32.3
+langchain 
+langgraph 
+langchain-community 
+langchain-core 
+duckduckgo-search 
+ddgs 
+langchain_huggingface 
+langgraph-checkpoint-sqlite
