@@ -15,6 +15,7 @@ import sqlite3
 conn = sqlite3.connect("my-db",check_same_thread=False)
 checkpointer = SqliteSaver(conn)
 
+from typing import TypedDict
 class ChatState(TypedDict, total=False):
     question: str
     location: str
