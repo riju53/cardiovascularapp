@@ -1,10 +1,15 @@
-streamlit==1.45.1
-requests==2.32.3
-langchain 
-langgraph 
-langchain-community 
-langchain-core 
-duckduckgo-search 
-ddgs 
-langchain_huggingface 
+streamlit
+requests
+
+# LangChain / LangGraph
+langchain
+langchain-community
+langchain-groq
+langgraph
 langgraph-checkpoint-sqlite
+
+# Web search
+duckduckgo-search
+
+# Environment variables
+python-dotenv
