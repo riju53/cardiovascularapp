@@ -10,6 +10,6 @@ langgraph-checkpoint-sqlite
 
 # Web search
 duckduckgo-search
-
+ddgs
 # Environment variables
 python-dotenv
