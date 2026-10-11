@@ -1,6 +1,6 @@
 from langchain_groq import ChatGroq
 #GROQ_API_KEY = "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"
-GROQ_API_KE = st.secrets["GROQ_API_KEY"]
+GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
 model = ChatGroq(
     model = "openai/gpt-oss-120b",
     groq_api_key = GROQ_API_KEY,
