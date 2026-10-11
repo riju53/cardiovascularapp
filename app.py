@@ -519,27 +519,27 @@ immediately. Do not delay care while using this application.
         "final_response": final_response
     }
 
-from langgraph.graph import StateGraph,START,END
+from langgraph.graph import StateGraph, START, END
 
 graph = StateGraph(ChatState)
 
-graph.add_node("extract_input",extract_input)
-graph.add_node("predict_input",safe_predict_input)
-graph.add_node("search_tool",search_tool)
+graph.add_node("extract_input", extract_input)
+graph.add_node("predict_input", safe_predict_input)
+graph.add_node("search_tool", search_tool)
 graph.add_node("calculate_bmi", calculate_bmi)
-graph.add_node("advice_tool",advice_tool)
-graph.add_node("final_output",final_output)
+graph.add_node("advice_tool", advice_tool)
+graph.add_node("final_output", final_output)
 
-graph.add_edge(START,"extract_input")
-graph.add_edge("extract_input","predict_input")
-graph.add_edge("predict_input","search_tool")
-graph.add_edge("search_tool","calculate_bmi")
-graph.add_edge("calculate_bmi","advice_tool")
-graph.add_edge("advice_tool","final_output")
-graph.add_edge("final_output",END)
+graph.add_edge(START, "extract_input")
+graph.add_edge("extract_input", "predict_input")
+graph.add_edge("predict_input", "search_tool")
+graph.add_edge("search_tool", "calculate_bmi")
+graph.add_edge("calculate_bmi", "advice_tool")
+graph.add_edge("advice_tool", "final_output")
+graph.add_edge("final_output", END)
 
-return graph.compile(checkpointer=checkpointer)
-
+# Compile ONCE
+graph_app = graph.compile(checkpointer=checkpointer)
 # Streamlit portion
 
 st.sidebar.title("❤️ Patient Information")
@@ -632,7 +632,8 @@ if st.sidebar.button(
     }
 
     try:
-        graph_app = build_graph()
+        # DON'T call build_graph() here
+        # graph_app is already compiled above
 
         thread_id = str(uuid.uuid4())
 
@@ -652,15 +653,16 @@ if st.sidebar.button(
 
         st.success("Health report generated.")
 
-        # Prediction result
         st.subheader("Machine Learning Prediction")
 
         prediction = result.get("prediction")
 
         if prediction is None:
             st.warning("Prediction unavailable.")
+
             if result.get("api_error"):
                 st.code(result["api_error"])
+
         else:
             st.metric("Model class", prediction)
 
@@ -669,26 +671,40 @@ if st.sidebar.button(
                 "determine what class 0 or class 1 represents."
             )
 
-        # BMI
         col1, col2 = st.columns(2)
 
         with col1:
-            st.metric("BMI", f"{result['bmi']} kg/m²")
+            st.metric(
+                "BMI",
+                f"{result['bmi']} kg/m²"
+            )
 
         with col2:
-            st.metric("BMI category", result["bmi_category"])
+            st.metric(
+                "BMI category",
+                result["bmi_category"]
+            )
 
-        # Final report
         st.markdown(result["final_response"])
 
         with st.expander("Submitted patient information"):
             st.json(patient_state)
 
         with st.expander("Medical research search results"):
-            st.write(result.get("research", "Unavailable"))
+            st.write(
+                result.get(
+                    "research",
+                    "Unavailable"
+                )
+            )
 
         with st.expander("Doctor search results"):
-            st.write(result.get("doctor_results", "Unavailable"))
+            st.write(
+                result.get(
+                    "doctor_results",
+                    "Unavailable"
+                )
+            )
 
         st.download_button(
             "Download Health Report",
@@ -698,5 +714,7 @@ if st.sidebar.button(
         )
 
     except Exception as exc:
-        st.error("The report could not be generated.")
+        st.error(
+            "The report could not be generated."
+        )
         st.exception(exc)
